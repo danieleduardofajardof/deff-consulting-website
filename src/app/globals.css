@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: #f5f7fa;
+  --color-foreground: #1a1a1a;
+  --color-card: #ffffff;
+  --color-card-foreground: #1a1a1a;
+  --color-muted: #f0f4f8;
+  --color-muted-foreground: #6b7280;
+  --color-accent: #0a1f44;
+  --color-accent-foreground: #ffffff;
+  --color-border: #e5e7eb;
+  --color-primary: #0a1f44;
+  --color-primary-foreground: #ffffff;
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f5f7fa;
+}
+::-webkit-scrollbar-thumb {
+  background: #c4cdd5;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #9aa5b1;
+}
+
+/* Hero gradient */
+.gradient-hero {
+  background: linear-gradient(135deg, #e0f0ff 0%, #f4faff 50%, #e8f4fd 100%);
+}
+
+/* Section backgrounds */
+.gradient-section {
+  background: linear-gradient(to bottom, #f5f7fa 0%, #ffffff 40%, #ffffff 60%, #f5f7fa 100%);
+}
+
+/* Subtle glow for accent elements */
+.glow-accent {
+  box-shadow: 0 0 30px rgba(10, 31, 68, 0.1), 0 0 60px rgba(10, 31, 68, 0.05);
+}
+
+.glow-text {
+  text-shadow: 0 0 30px rgba(10, 31, 68, 0.15);
+}
+
+/* Grid pattern background */
+.grid-pattern {
+  background-image:
+    linear-gradient(rgba(10, 31, 68, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(10, 31, 68, 0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
