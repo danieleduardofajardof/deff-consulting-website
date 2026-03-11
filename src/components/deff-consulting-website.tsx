@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -12,15 +14,12 @@ import {
   Mail,
   X,
   Menu,
-  CheckCircle,
   Eye,
   Cpu,
-  BarChart3,
   Workflow,
   Waves,
   PieChart,
   ShieldCheck,
-  CreditCard,
   GraduationCap,
 } from "lucide-react";
 
@@ -43,83 +42,51 @@ const stagger = {
   visible: { transition: { staggerChildren: 0.1 } },
 };
 
-/* ─────────── data ─────────── */
-const services = [
-  {
-    icon: Cloud,
-    title: "Cloud Transformation",
-    desc: "We help businesses migrate, manage, and scale their cloud infrastructure efficiently and securely.",
-  },
-  {
-    icon: Database,
-    title: "Data Strategy",
-    desc: "Design and implement modern data pipelines, analytics, and governance models to extract value from your data.",
-  },
-  {
-    icon: BrainCircuit,
-    title: "AI & Automation",
-    desc: "Leverage AI and intelligent automation to optimize operations and improve decision-making.",
-  },
-];
-
-const successCases = [
-  {
-    icon: Cpu,
-    title: "AI-Powered Soft Skills Coach Chatbot",
-    desc: "Designed and deployed an AI-driven chatbot using RAG architecture, integrated with Slack and Azure Speech Services. Deployed on AKS with Cosmos DB for data storage.",
-  },
-  {
-    icon: Cloud,
-    title: "Infrastructure Automation with Terraform and AWS",
-    desc: "Automated multi-account AWS environments using Terraform. Implemented CI/CD pipelines and managed infrastructure deployments with GitOps workflows.",
-  },
-  {
-    icon: BrainCircuit,
-    title: "ML System on GCP",
-    desc: "Built a scalable ML system on Google Cloud Platform using Vertex AI, BigQuery, and Cloud Functions. Supported batch and real-time inference with monitoring and alerting.",
-  },
-  {
-    icon: Workflow,
-    title: "Data Pipelines on Databricks & Airflow",
-    desc: "Developed reliable data pipelines using PySpark on Databricks and orchestrated with Airflow for a global retail client. Ensured data quality and lineage with robust testing.",
-  },
-  {
-    icon: Waves,
-    title: "Streaming Analytics with Kafka and Flink",
-    desc: "Designed real-time analytics platform for event processing using Kafka and Apache Flink. Delivered insights with sub-second latency for a fintech company.",
-  },
-  {
-    icon: PieChart,
-    title: "Power BI Analytics Dashboard for Retail",
-    desc: "Built interactive dashboards in Power BI to track key retail KPIs, enabling store managers to optimize inventory, marketing, and operations across regions.",
-  },
-  {
-    icon: Eye,
-    title: "Computer Vision for Oil & Gas",
-    desc: "Implemented a computer vision solution to detect equipment anomalies using deep learning models. Improved inspection efficiency and reduced downtime significantly.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Fraud Detection for Banking",
-    desc: "Developed real-time fraud detection models with ensemble learning techniques on large-scale transaction data, deployed to monitor suspicious activity continuously.",
-  },
-  {
-    icon: GraduationCap,
-    title: "EdTech NLP Platform",
-    desc: "Built an NLP-based Q&A platform for an EdTech company, applying transformer models to extract answers from learning content and personalize study paths for students.",
-  },
+/* ─────────── icon maps (order matches dictionary items) ─────────── */
+const serviceIcons = [Cloud, Database, BrainCircuit];
+const successCaseIcons = [
+  Cpu, Cloud, BrainCircuit, Workflow, Waves, PieChart, Eye, ShieldCheck, GraduationCap,
 ];
 
 /* ─────────── component ─────────── */
-export default function DeffConsultingWebsite() {
+export default function DeffConsultingWebsite({
+  dictionary,
+  locale,
+}: {
+  dictionary: any;
+  locale: string;
+}) {
   const [contactOpen, setContactOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
+
+  const t = dictionary;
+
+  const services = t.services.items.map(
+    (item: { title: string; desc: string }, i: number) => ({
+      icon: serviceIcons[i],
+      title: item.title,
+      desc: item.desc,
+    })
+  );
+
+  const successCases = t.success_cases.items.map(
+    (item: { title: string; desc: string }, i: number) => ({
+      icon: successCaseIcons[i],
+      title: item.title,
+      desc: item.desc,
+    })
+  );
 
   const navLinks = [
-    { label: "Services", href: "#services" },
-    { label: "Success Cases", href: "#success-cases" },
-    { label: "About", href: "#about" },
+    { label: t.nav.services, href: "#services" },
+    { label: t.nav.success_cases, href: "#success-cases" },
+    { label: t.nav.about, href: "#about" },
   ];
+
+  const titleWords = t.hero.title.split(" ");
+  const titleMain = titleWords.slice(0, -2).join(" ");
+  const titleHighlight = titleWords.slice(-2).join(" ");
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -146,12 +113,34 @@ export default function DeffConsultingWebsite() {
                 {l.label}
               </a>
             ))}
+
+            {/* Locale switcher */}
+            <div className="flex items-center gap-2 border-l border-white/20 ml-1 pl-4">
+              <Link
+                href={pathname.replace(`/${locale}`, "/en")}
+                className={`text-sm font-semibold transition-colors ${
+                  locale === "en" ? "text-white" : "text-white/50 hover:text-white"
+                }`}
+              >
+                EN
+              </Link>
+              <span className="text-white/30">|</span>
+              <Link
+                href={pathname.replace(`/${locale}`, "/es")}
+                className={`text-sm font-semibold transition-colors ${
+                  locale === "es" ? "text-white" : "text-white/50 hover:text-white"
+                }`}
+              >
+                ES
+              </Link>
+            </div>
+
             <Button
               size="sm"
               className="bg-white text-[#0a1f44] hover:bg-white/90 font-semibold"
               onClick={() => setContactOpen(true)}
             >
-              Contact
+              {t.nav.contact}
             </Button>
           </nav>
 
@@ -181,6 +170,28 @@ export default function DeffConsultingWebsite() {
                 {l.label}
               </a>
             ))}
+
+            {/* Mobile locale switcher */}
+            <div className="flex items-center gap-3 py-2 border-t border-white/10 mt-2">
+              <Link
+                href={pathname.replace(`/${locale}`, "/en")}
+                className={`text-sm font-semibold transition-colors ${
+                  locale === "en" ? "text-white" : "text-white/50 hover:text-white"
+                }`}
+              >
+                EN
+              </Link>
+              <span className="text-white/30">|</span>
+              <Link
+                href={pathname.replace(`/${locale}`, "/es")}
+                className={`text-sm font-semibold transition-colors ${
+                  locale === "es" ? "text-white" : "text-white/50 hover:text-white"
+                }`}
+              >
+                ES
+              </Link>
+            </div>
+
             <Button
               size="sm"
               className="mt-2 w-full bg-white text-[#0a1f44] hover:bg-white/90 font-semibold"
@@ -189,7 +200,7 @@ export default function DeffConsultingWebsite() {
                 setMobileMenuOpen(false);
               }}
             >
-              Contact
+              {t.nav.contact}
             </Button>
           </motion.div>
         )}
@@ -205,9 +216,9 @@ export default function DeffConsultingWebsite() {
             viewport={{ once: true }}
             className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#0a1f44] mb-6 leading-tight"
           >
-            Empowering Your{" "}
+            {titleMain}{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0a1f44] to-[#1e40af]">
-              Digital Future
+              {titleHighlight}
             </span>
           </motion.h2>
           <motion.p
@@ -217,8 +228,7 @@ export default function DeffConsultingWebsite() {
             viewport={{ once: true }}
             className="text-lg md:text-xl text-[#0a1f44]/70 max-w-2xl mx-auto mb-10"
           >
-            Technology solutions tailored to your business goals. Let&apos;s
-            innovate together.
+            {t.hero.subtitle}
           </motion.p>
           <motion.div
             variants={fadeIn}
@@ -231,7 +241,7 @@ export default function DeffConsultingWebsite() {
               className="bg-[#0a1f44] text-white hover:bg-[#0a1f44]/90 text-base font-semibold shadow-lg"
               onClick={() => setContactOpen(true)}
             >
-              Get Started <ArrowRight className="ml-2 w-5 h-5" />
+              {t.hero.cta} <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
           </motion.div>
         </div>
@@ -247,7 +257,7 @@ export default function DeffConsultingWebsite() {
             viewport={{ once: true }}
             className="text-3xl md:text-4xl font-extrabold text-center text-[#0a1f44] mb-4"
           >
-            Our Services
+            {t.services.title}
           </motion.h2>
           <motion.p
             variants={fadeIn}
@@ -256,8 +266,7 @@ export default function DeffConsultingWebsite() {
             viewport={{ once: true }}
             className="text-center text-muted-foreground mb-12 max-w-xl mx-auto"
           >
-            End-to-end technology consulting to accelerate your business
-            transformation.
+            {t.services.description}
           </motion.p>
 
           <motion.div
@@ -267,7 +276,7 @@ export default function DeffConsultingWebsite() {
             viewport={{ once: true }}
             className="grid md:grid-cols-3 gap-8"
           >
-            {services.map((s, i) => (
+            {services.map((s: { icon: React.ElementType; title: string; desc: string }, i: number) => (
               <motion.div key={s.title} custom={i} variants={fadeUp}>
                 <Card className="h-full border-border bg-muted/40 hover:shadow-xl transition-shadow duration-300">
                   <CardContent className="p-8 text-center">
@@ -301,7 +310,7 @@ export default function DeffConsultingWebsite() {
             viewport={{ once: true }}
             className="text-3xl md:text-4xl font-extrabold text-center text-[#0a1f44] mb-4"
           >
-            Success Cases
+            {t.success_cases.title}
           </motion.h2>
           <motion.p
             variants={fadeIn}
@@ -310,7 +319,7 @@ export default function DeffConsultingWebsite() {
             viewport={{ once: true }}
             className="text-center text-muted-foreground mb-12 max-w-xl mx-auto"
           >
-            Real-world impact across diverse industries.
+            {t.success_cases.description}
           </motion.p>
 
           <motion.div
@@ -320,7 +329,7 @@ export default function DeffConsultingWebsite() {
             viewport={{ once: true }}
             className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
           >
-            {successCases.map((c, i) => (
+            {successCases.map((c: { icon: React.ElementType; title: string; desc: string }, i: number) => (
               <motion.div key={c.title} custom={i} variants={fadeUp}>
                 <Card className="h-full border-border bg-white hover:shadow-lg transition-shadow duration-300">
                   <CardContent className="p-6">
@@ -351,7 +360,7 @@ export default function DeffConsultingWebsite() {
             viewport={{ once: true }}
             className="text-3xl md:text-4xl font-extrabold text-center text-[#0a1f44] mb-8"
           >
-            About Us
+            {t.about.title}
           </motion.h2>
           <motion.div
             variants={fadeIn}
@@ -360,25 +369,9 @@ export default function DeffConsultingWebsite() {
             viewport={{ once: true }}
             className="space-y-6 text-foreground/80 text-lg leading-relaxed"
           >
-            <p>
-              We are a team of professionals with a multidisciplinary foundation
-              and a proven track record across diverse industries. With
-              backgrounds ranging from physics and economics to computer science,
-              our core expertise lies in problem-solving, effective
-              communication, and teamwork. We specialize in developing reliable,
-              data-driven solutions with substantial experience in machine
-              learning, including time-series analysis, computer vision, and
-              natural language processing.
-            </p>
-            <p>
-              As self-motivated learners, we have mastered advanced topics such
-              as artificial intelligence and cloud computing. Our portfolio
-              includes hands-on projects for the retail, banking, finance,
-              healthcare, oil &amp; gas, energy, govtech, and edtech sectors. We
-              bridge the gap between technical and non-technical stakeholders,
-              and we are proficient in leading cloud platforms such as GCP,
-              Azure, AWS, and IBM Cloud.
-            </p>
+            {t.about.paragraphs.map((p: string, i: number) => (
+              <p key={i}>{p}</p>
+            ))}
           </motion.div>
 
           {/* Expertise badges */}
@@ -389,20 +382,7 @@ export default function DeffConsultingWebsite() {
             viewport={{ once: true }}
             className="mt-10 flex flex-wrap justify-center gap-3"
           >
-            {[
-              "GCP",
-              "Azure",
-              "AWS",
-              "IBM Cloud",
-              "Machine Learning",
-              "NLP",
-              "Computer Vision",
-              "Time-Series",
-              "Terraform",
-              "Databricks",
-              "Kafka",
-              "Power BI",
-            ].map((tag, i) => (
+            {t.about.tags.map((tag: string, i: number) => (
               <motion.span
                 key={tag}
                 custom={i}
@@ -420,16 +400,15 @@ export default function DeffConsultingWebsite() {
       <footer className="bg-[#0a1f44] text-white py-10">
         <div className="max-w-6xl mx-auto px-6 text-center space-y-3">
           <p className="text-sm text-white/60">
-            &copy; {new Date().getFullYear()} DEFF Consulting. All rights
-            reserved.
+            &copy; {new Date().getFullYear()} DEFF Consulting. {t.footer.rights}
           </p>
           <p className="text-sm">
-            Contact us at{" "}
+            {t.footer.contact_text}{" "}
             <a
-              href="mailto:daniel.eduardo.fajardo@protonmail.com"
+              href={`mailto:${t.contact.email}`}
               className="text-[#7dc4ff] hover:underline"
             >
-              daniel.eduardo.fajardo@protonmail.com
+              {t.contact.email}
             </a>
           </p>
         </div>
@@ -462,7 +441,7 @@ export default function DeffConsultingWebsite() {
                 <Mail className="w-5 h-5 text-white" />
               </div>
               <h3 className="text-xl font-bold text-[#0a1f44]">
-                Get in Touch
+                {t.contact.title}
               </h3>
             </div>
 
@@ -479,44 +458,44 @@ export default function DeffConsultingWebsite() {
                 const message = (
                   form.elements.namedItem("message") as HTMLTextAreaElement
                 ).value;
-                window.location.href = `mailto:daniel.eduardo.fajardo@protonmail.com?subject=Contact from ${encodeURIComponent(name)}&body=${encodeURIComponent(`From: ${name} (${email})\n\n${message}`)}`;
+                window.location.href = `mailto:${t.contact.email}?subject=Contact from ${encodeURIComponent(name)}&body=${encodeURIComponent(`From: ${name} (${email})\n\n${message}`)}`;
                 setContactOpen(false);
               }}
               className="space-y-4"
             >
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Name
+                  {t.contact.name_label}
                 </label>
                 <input
                   name="name"
                   type="text"
                   required
-                  placeholder="Your name"
+                  placeholder={t.contact.name_placeholder}
                   className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0a1f44]/20 focus:border-[#0a1f44] transition-colors text-gray-900"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Email
+                  {t.contact.email_label}
                 </label>
                 <input
                   name="email"
                   type="email"
                   required
-                  placeholder="your@email.com"
+                  placeholder={t.contact.email_placeholder}
                   className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0a1f44]/20 focus:border-[#0a1f44] transition-colors text-gray-900"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Message
+                  {t.contact.message_label}
                 </label>
                 <textarea
                   name="message"
                   required
                   rows={4}
-                  placeholder="Tell us about your project..."
+                  placeholder={t.contact.message_placeholder}
                   className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0a1f44]/20 focus:border-[#0a1f44] transition-colors resize-none text-gray-900"
                 />
               </div>
@@ -525,7 +504,7 @@ export default function DeffConsultingWebsite() {
                 size="lg"
                 className="w-full bg-[#0a1f44] text-white hover:bg-[#0a1f44]/90 font-semibold"
               >
-                Send Message <ArrowRight className="ml-2 w-4 h-4" />
+                {t.contact.cta} <ArrowRight className="ml-2 w-4 h-4" />
               </Button>
             </form>
           </motion.div>

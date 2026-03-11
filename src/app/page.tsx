@@ -1,5 +1,5 @@
-import DeffConsultingWebsite from "@/components/deff-consulting-website";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return <DeffConsultingWebsite />;
+  redirect("/en");
 }
