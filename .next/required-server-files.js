@@ -100,7 +100,7 @@ self.__SERVER_FILES_MANIFEST={
         "transform": "lodash/{{member}}"
       }
     },
-    "outputFileTracingRoot": "/home/deff/Downloads/deff-consulting/deff-consulting-website",
+    "outputFileTracingRoot": "/home/deff/Downloads/deff-consulting/websites/deff-consulting-website",
     "cacheComponents": false,
     "cacheLife": {
       "default": {
@@ -293,11 +293,11 @@ self.__SERVER_FILES_MANIFEST={
     "bundlePagesRouterDependencies": false,
     "configFileName": "next.config.mjs",
     "turbopack": {
-      "root": "/home/deff/Downloads/deff-consulting/deff-consulting-website"
+      "root": "/home/deff/Downloads/deff-consulting/websites/deff-consulting-website"
     },
     "distDirRoot": ".next"
   },
-  "appDir": "/home/deff/Downloads/deff-consulting/deff-consulting-website",
+  "appDir": "/home/deff/Downloads/deff-consulting/websites/deff-consulting-website",
   "relativeAppDir": "",
   "files": [
     ".next/routes-manifest.json",
